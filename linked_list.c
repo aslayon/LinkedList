@@ -1,53 +1,63 @@
 #include "LinkedList_int.h"
 #include <stdio.h>
 #include <stdlib.h>
+#include<Windows.h>
 
-
-
+void Traversal(LinkedList* _ptList);
 
 ////////////////////////////////////////////////////////////////////
 
 /*
-	ê¸°ëŠ¥ : ê´€ë¦¬êµ¬ì¡°ë¥¼ ì´ˆê¸°í™” í•œë‹¤.
-	í•¨ìˆ˜ëª… : Create
-	ì¸ìì •ë³´ : ê´€ë¦¬êµ¬ì¡° ê¸°ì–µë³€ìˆ˜ì˜ ì£¼ì†Œ(LinkedList **)
-	ë˜ëŒë¦¼ê°’ : -
-	ì•Œê³ ë¦¬ì¦˜ : -
+	±â´É : °ü¸®±¸Á¶¸¦ ÃÊ±âÈ­ ÇÑ´Ù.
+	ÇÔ¼ö¸í : Create
+	ÀÎÀÚÁ¤º¸ : °ü¸®±¸Á¶ ±â¾ïº¯¼öÀÇ ÁÖ¼Ò(LinkedList **)
+	µÇµ¹¸²°ª : -
+	¾Ë°í¸®Áò : -
 */
 
 void Create(LinkedList** _ptList) {
-	//0ìœ¼ë¡œ ì´ˆê¸°í™”ëœ ê´€ë¦¬êµ¬ì¡°ë¥¼ ìƒì„±
+	//0À¸·Î ÃÊ±âÈ­µÈ °ü¸®±¸Á¶¸¦ »ı¼º
 	*_ptList = (LinkedList*)calloc(1, sizeof(LinkedList));
 }
 
 
 /*
-	ê¸°ëŠ¥ : ê´€ë¦¬êµ¬ì¡°ë¥¼ ì‚­ì œ í•œë‹¤.
-	í•¨ìˆ˜ëª… : Destroy
-	ì¸ìì •ë³´ : ê´€ë¦¬êµ¬ì¡° ê¸°ì–µë³€ìˆ˜ì˜ ì£¼ì†Œ(LinkedList **)
-	ë˜ëŒë¦¼ê°’ : -
-	ì•Œê³ ë¦¬ì¦˜ : ë…¸ë“œë¥¼ ìˆœíšŒí•˜ë©° 
+	±â´É : °ü¸®±¸Á¶¸¦ »èÁ¦ ÇÑ´Ù.
+	ÇÔ¼ö¸í : Destroy
+	ÀÎÀÚÁ¤º¸ : °ü¸®±¸Á¶ ±â¾ïº¯¼öÀÇ ÁÖ¼Ò(LinkedList **)
+	µÇµ¹¸²°ª : -
+	¾Ë°í¸®Áò : ³ëµå¸¦ ¼øÈ¸ÇÏ¸ç
 */
 
 void Destroy(LinkedList** _ptList) {
-	if (!(*_ptList)) {
-		return;				//ë¹„ì–´ ìˆìœ¼ë©´ ì¢…ë£Œ
+	if ((*_ptList) == NULL) {
+		printf("ÇØ´ç ¸®½ºÆ®´Â ºñ¾î ÀÖ½À´Ï´Ù.");
+		Sleep(2000);
+		return;				//ºñ¾î ÀÖÀ¸¸é Á¾·á
+	}
+	if (!(*_ptList)->m_pHead) {
+		free(*_ptList);
+		*_ptList = NULL;
+		return;				//ºñ¾î ÀÖÀ¸¸é Á¾·á
 	}
 	while ((*_ptList)->m_uCount != 0) {
-		(*_ptList)->m_pCurrent = (*_ptList)->m_pHead;;
-		(*_ptList)->m_pHead = (*_ptList)->m_pCurrent->m_pNext;
-		free((*_ptList)->m_pCurrent);
+		(*_ptList)->m_pCurrent = (*_ptList)->m_pHead->m_pNext;
+		free((*_ptList)->m_pHead);
+		(*_ptList)->m_pHead = (*_ptList)->m_pCurrent;
+
 		(*_ptList)->m_uCount--;
+
 	}
 	free(*_ptList);
+	*_ptList = NULL;
 }
 
 /*
-	ê¸°ëŠ¥ : ë…¸ë“œë¥¼ ìƒì„±
-	í•¨ìˆ˜ëª… : GetNode
-	ì¸ìì •ë³´ : ê°ì²´ ê°’(int)
-	ë˜ëŒë¦¼ê°’ : Node *
-	ì•Œê³ ë¦¬ì¦˜ : -
+	±â´É : ³ëµå¸¦ »ı¼º
+	ÇÔ¼ö¸í : GetNode
+	ÀÎÀÚÁ¤º¸ : °´Ã¼ °ª(int)
+	µÇµ¹¸²°ª : Node *
+	¾Ë°í¸®Áò : -
 */
 
 
@@ -61,19 +71,23 @@ Node* GetNode(int _iObject) {
 }
 
 /*
-	ê¸°ëŠ¥ : ì„ì˜ ìœ„ì¹˜ ê°’ ì½ê¸°
-	í•¨ìˆ˜ëª… : Read
-	ì¸ìì •ë³´ : LinkedList * unsigned int
-	ë˜ëŒë¦¼ê°’ : Node * // ì˜¤ë¥˜ ì‹œ NULL
-	ì•Œê³ ë¦¬ì¦˜ : -
+	±â´É : ÀÓÀÇ À§Ä¡ °ª ÀĞ±â
+	ÇÔ¼ö¸í : Read
+	ÀÎÀÚÁ¤º¸ : LinkedList * unsigned int
+	µÇµ¹¸²°ª : Node * // ¿À·ù ½Ã NULL
+	¾Ë°í¸®Áò : -
 */
 
 Node* Read(LinkedList* _ptList, unsigned int i) {
 	if (!(_ptList)) {
-		return NULL;				//ë¹„ì–´ ìˆìœ¼ë©´ ì¢…ë£Œ
+		printf("ÇØ´ç ¸®½ºÆ®´Â ºñ¾î ÀÖ½À´Ï´Ù.");
+		Sleep(2000);
+		return NULL;				//ºñ¾î ÀÖÀ¸¸é Á¾·á
 	}
 	if (_ptList->m_uCount < i) {
-		return NULL;				//ë²—ì–´ë‚˜ë©´ ì¢…ë£Œ
+		printf("ÇØ´ç ¸®½ºÆ®´Â %d°³ÀÇ ¿ä¼Ò¸¸ °®°íÀÖ½À´Ï´Ù.", _ptList->m_uCount);
+		Sleep(2000);
+		return NULL;				//¹ş¾î³ª¸é Á¾·á
 	}
 	int count = 0;
 	_ptList->m_pCurrent = _ptList->m_pHead;
@@ -85,31 +99,38 @@ Node* Read(LinkedList* _ptList, unsigned int i) {
 }
 
 /*
-	ê¸°ëŠ¥ : ë…¸ë“œ ìˆœíšŒ
-	í•¨ìˆ˜ëª… : Read
-	ì¸ìì •ë³´ : LinkedList * 
-	ë˜ëŒë¦¼ê°’ : -
-	ì•Œê³ ë¦¬ì¦˜ : ìˆœíšŒí•˜ë©° m_iObject ê°’ ì¶œë ¥
+	±â´É : ³ëµå ¼øÈ¸
+	ÇÔ¼ö¸í : Read
+	ÀÎÀÚÁ¤º¸ : LinkedList *
+	µÇµ¹¸²°ª : -
+	¾Ë°í¸®Áò : ¼øÈ¸ÇÏ¸ç m_iObject °ª Ãâ·Â
 */
 
 void Traversal(LinkedList* _ptList) {
 	int count = 0;/*
 	_ptList->m_pCurrent = _ptList->m_pHead;
-	printf("ìˆœíšŒ ì‹œì‘\n");
+	printf("¼øÈ¸ ½ÃÀÛ\n");
 	while (count < _ptList->m_uCount) {
 		printf("%d\n", _ptList->m_pCurrent->m_iObject);
 		_ptList->m_pCurrent = _ptList->m_pCurrent->m_pNext;
 		count++;
 	}
 	*/
-
+	if (!_ptList) {
+		printf("ÇØ´ç¸®½ºÆ®´Â ¸¸µé¾îÁöÁö ¾Ê¾Ò½À´Ï´Ù.");
+		Sleep(3000);
+		return;
+	}
+	if (!_ptList->m_pHead) { printf("Empty"); Sleep(2000); return; }
+	
 	Node* curr = _ptList->m_pHead;
-	printf("\n");
 	while (count < _ptList->m_uCount) {
-		printf("%p <- %d -> %p \n",curr->m_pPrevious, curr->m_iObject,curr->m_pNext);
+
+		printf(" %d @ \n", curr->m_iObject);
 		curr = curr->m_pNext;
 		count++;
 	}
+	Sleep(3000);
 }
 
 
@@ -117,23 +138,25 @@ void Traversal(LinkedList* _ptList) {
 ////////////////////////////////////////////////////////////////////
 
 /*
-	ê¸°ëŠ¥ : ì•ì— ë…¸ë“œë¥¼ ì¶”ê°€í•œë‹¤.
-	í•¨ìˆ˜ëª… : AppendFromHead
-	ì¸ìì •ë³´ : LinkedList* , int
-	ë˜ëŒë¦¼ê°’ : Node *
-	ì•Œê³ ë¦¬ì¦˜ : -
+	±â´É : ¾Õ¿¡ ³ëµå¸¦ Ãß°¡ÇÑ´Ù.
+	ÇÔ¼ö¸í : AppendFromHead
+	ÀÎÀÚÁ¤º¸ : LinkedList* , int
+	µÇµ¹¸²°ª : Node *
+	¾Ë°í¸®Áò : -
 */
 
-Node * AppendFromHead(LinkedList* _ptList, int _iObject) {
+Node* AppendFromHead(LinkedList* _ptList, int _iObject) {
+	if (!_ptList) { printf("ÇØ´ç¸®½ºÆ®´Â ¸¸µé¾îÁöÁö ¾Ê¾Ò½À´Ï´Ù."); Sleep(500); return NULL; }
+
 	_ptList->m_pCurrent = GetNode(_iObject);
 	if (_ptList->m_pHead) {
-		_ptList->m_pCurrent->m_pNext = _ptList->m_pHead; // ë¹„ì–´ìˆì§€ ì•Šìœ¼ë©´ ì¶”ê°€í•  ë…¸ë“œì˜ ë„¥ìŠ¤íŠ¸ë¥¼  ì´ì „ì˜ í—¤ë“œë¡œ
-		_ptList->m_pHead->m_pPrevious = _ptList->m_pCurrent; //ì´ì „ í—¤ë“œì˜ prev ë¥¼ ì¶”ê°€í•  ë…¸ë“œë¡œ
+		_ptList->m_pCurrent->m_pNext = _ptList->m_pHead; // ºñ¾îÀÖÁö ¾ÊÀ¸¸é Ãß°¡ÇÒ ³ëµåÀÇ ³Ø½ºÆ®¸¦  ÀÌÀüÀÇ Çìµå·Î
+		_ptList->m_pHead->m_pPrevious = _ptList->m_pCurrent; //ÀÌÀü ÇìµåÀÇ prev ¸¦ Ãß°¡ÇÒ ³ëµå·Î
 	}
 	else {
-		_ptList->m_pTail = _ptList->m_pCurrent;			//ë¹„ì–´ìˆìœ¼ë©´ tail ë§Œ ê°±ì‹ 
+		_ptList->m_pTail = _ptList->m_pCurrent;			//ºñ¾îÀÖÀ¸¸é tail ¸¸ °»½Å
 	}
-	_ptList->m_pHead = _ptList->m_pCurrent;				//ê´€ë¦¬êµ¬ì¡° ê°±ì‹ 
+	_ptList->m_pHead = _ptList->m_pCurrent;				//°ü¸®±¸Á¶ °»½Å
 	(_ptList->m_uCount)++;
 
 	return _ptList->m_pCurrent;
@@ -141,71 +164,150 @@ Node * AppendFromHead(LinkedList* _ptList, int _iObject) {
 
 
 /*
-	ê¸°ëŠ¥ : ë’¤ì— ë…¸ë“œë¥¼ ì¶”ê°€í•œë‹¤.
-	í•¨ìˆ˜ëª… : AppendFromtail
-	ì¸ìì •ë³´ : LinkedList* , int
-	ë˜ëŒë¦¼ê°’ : Node *
-	ì•Œê³ ë¦¬ì¦˜ : -
+	±â´É : µÚ¿¡ ³ëµå¸¦ Ãß°¡ÇÑ´Ù.
+	ÇÔ¼ö¸í : AppendFromtail
+	ÀÎÀÚÁ¤º¸ : LinkedList* , int
+	µÇµ¹¸²°ª : Node *
+	¾Ë°í¸®Áò : -
 */
 
-Node * AppendFromTail(LinkedList* _ptList, int _iObject) {
+Node* AppendFromTail(LinkedList* _ptList, int _iObject) {
+	if (!_ptList) { printf("ÇØ´ç¸®½ºÆ®´Â ¸¸µé¾îÁöÁö ¾Ê¾Ò½À´Ï´Ù."); Sleep(500); return NULL; }
+
 	_ptList->m_pCurrent = GetNode(_iObject);
 	if (_ptList->m_pHead) {
-		_ptList->m_pCurrent->m_pPrevious = _ptList->m_pTail; // ë¹„ì–´ìˆì§€ ì•Šìœ¼ë©´ ì¶”ê°€í•  ë…¸ë“œì˜ ë„¥ìŠ¤íŠ¸ë¥¼  ì´ì „ì˜ tailë¡œ
-		_ptList->m_pTail->m_pNext = _ptList->m_pCurrent; //ì´ì „ í—¤ë“œì˜ next ë¥¼ ì¶”ê°€í•  ë…¸ë“œë¡œ
+		_ptList->m_pCurrent->m_pPrevious = _ptList->m_pTail; // ºñ¾îÀÖÁö ¾ÊÀ¸¸é Ãß°¡ÇÒ ³ëµåÀÇ ³Ø½ºÆ®¸¦  ÀÌÀüÀÇ tail·Î
+		_ptList->m_pTail->m_pNext = _ptList->m_pCurrent; //ÀÌÀü ÇìµåÀÇ next ¸¦ Ãß°¡ÇÒ ³ëµå·Î
 	}
 	else {
-		_ptList->m_pHead = _ptList->m_pCurrent;			//ë¹„ì–´ìˆìœ¼ë©´ head ë§Œ ê°±ì‹ 
+		_ptList->m_pHead = _ptList->m_pCurrent;			//ºñ¾îÀÖÀ¸¸é head ¸¸ °»½Å
 	}
-	_ptList->m_pTail = _ptList->m_pCurrent;				// ê´€ë¦¬êµ¬ì¡° ê°±ì‹ 
+	_ptList->m_pTail = _ptList->m_pCurrent;				// °ü¸®±¸Á¶ °»½Å
 	(_ptList->m_uCount)++;
 
 	return _ptList->m_pCurrent;
 }
 ////////////////////////////////////////////////////////////////////
 
+
+Node* InsertBefore(LinkedList* _ptList, Node* _ptNode, int Object) {
+	if (_ptList == NULL) {
+		printf(" ÇØ´ç ¸®½ºÆ®´Â ºñ¾îÀÖ½À´Ï´Ù.");
+		return _ptNode;
+	}
+	int Isin = 0;
+	_ptList->m_pCurrent = _ptList->m_pHead;
+	for (int i = 0; i < _ptList->m_uCount; i++) {
+		if (_ptList->m_pCurrent == _ptNode) {
+			printf("±âÁØ ³ëµå Ã£À½.\n");
+			Isin = 1;
+
+		}
+		_ptList->m_pCurrent = _ptList->m_pCurrent->m_pNext;
+	}
+	if (Isin == 0) {
+		printf("±âÁØ³ëµå ¾øÀ½\n");
+		Sleep(1000);
+		return _ptNode;
+
+	}
+
+	if (_ptList->m_pHead == _ptNode) {
+		return AppendFromHead(_ptList, Object);
+	}
+
+	_ptList->m_pCurrent = GetNode(Object);
+	_ptList->m_pCurrent->m_pPrevious = _ptNode->m_pPrevious;
+	_ptList->m_pCurrent->m_pNext = _ptNode;
+	_ptList->m_pCurrent->m_pPrevious->m_pNext = _ptList->m_pCurrent;
+	_ptNode->m_pPrevious = _ptList->m_pCurrent;
+	_ptList->m_uCount++;
+	return _ptList->m_pCurrent;
+}
+
+Node* InsertAfter(LinkedList* _ptList, Node* _ptNode, int Object) {
+	if (_ptList == NULL) {
+		printf(" ÇØ´ç ¸®½ºÆ®´Â ºñ¾îÀÖ½À´Ï´Ù.");
+		return _ptNode;
+	}
+	int Isin = 0;
+	_ptList->m_pCurrent = _ptList->m_pHead;
+	for (int i = 0; i < _ptList->m_uCount; i++) {
+		if (_ptList->m_pCurrent == _ptNode) {
+			printf("±âÁØ ³ëµå Ã£À½.\n");
+			Isin = 1;
+
+		}
+		_ptList->m_pCurrent = _ptList->m_pCurrent->m_pNext;
+	}
+	if (Isin == 0) {
+		printf("±âÁØ³ëµå ¾øÀ½\n");
+		Sleep(1000);
+		return _ptNode;
+	}
+
+	if (_ptList->m_pTail == _ptNode) {
+		return AppendFromTail(_ptList, Object);
+	}
+	_ptList->m_pCurrent = GetNode(Object);
+	_ptList->m_pCurrent->m_pNext = _ptNode->m_pNext;
+	_ptList->m_pCurrent->m_pPrevious = _ptNode;
+	_ptList->m_pCurrent->m_pNext->m_pPrevious = _ptList->m_pCurrent;
+	_ptNode->m_pNext = _ptList->m_pCurrent;
+	_ptList->m_uCount++;
+	return _ptList->m_pCurrent;
+}
+
+
 /*
-	ê¸°ëŠ¥ : ì•ì— ë…¸ë“œë¥¼ ì œê±°í•œë‹¤
-	í•¨ìˆ˜ëª… : DeleteFromHead
-	ì¸ìì •ë³´ : LinkedList*
-	ë˜ëŒë¦¼ê°’ : Node * // ì˜¤ë¥˜ ì‹œ NULL
-	ì•Œê³ ë¦¬ì¦˜ : -
+	±â´É : ¾Õ¿¡ ³ëµå¸¦ Á¦°ÅÇÑ´Ù
+	ÇÔ¼ö¸í : DeleteFromHead
+	ÀÎÀÚÁ¤º¸ : LinkedList*
+	µÇµ¹¸²°ª : Node * // ¿À·ù ½Ã NULL
+	¾Ë°í¸®Áò : -
 */
 
 Node* DeleteFromHead(LinkedList* _ptList) {
-	if (_ptList->m_uCount == 0) {						//ë¹„ì–´ìˆìœ¼ë©´ ë¦¬í„´
+	if (_ptList->m_uCount == 0) {						//ºñ¾îÀÖÀ¸¸é ¸®ÅÏ
+		printf("ÇØ´ç ¸®½ºÆ®´Â ºñ¾îÀÖ½À´Ï´Ù.");
+		Sleep(1000);
 		return NULL;
 	}
 
 	Node* deletedNode;
 
 	_ptList->m_pCurrent = _ptList->m_pHead;
-		
-	
+
+
 	_ptList->m_pHead = _ptList->m_pCurrent->m_pNext;
 	_ptList->m_pHead->m_pPrevious = _ptList->m_pHead;
 	(_ptList->m_uCount)--;
-
+	if (_ptList->m_uCount == 0) {
+		_ptList->m_pTail = NULL;
+		_ptList->m_pHead = NULL;
+	}
 	_ptList->m_pCurrent->m_pNext = NULL;
-	_ptList->m_pCurrent->m_pPrevious = NULL;	//í˜¹ì‹œëª¨ë¥¼ ì ‘ê·¼ ë°©ì§€
+	_ptList->m_pCurrent->m_pPrevious = NULL;	//È¤½Ã¸ğ¸¦ Á¢±Ù ¹æÁö
 
 	deletedNode = _ptList->m_pCurrent;
-	_ptList->m_pCurrent = NULL;					//ì‚­ì œëœ ë…¸ë“œ ì ‘ê·¼ë¶ˆê°€
+	_ptList->m_pCurrent = NULL;					//»èÁ¦µÈ ³ëµå Á¢±ÙºÒ°¡
 
 	return deletedNode;
 }
 
 
 /*
-	ê¸°ëŠ¥ : ë’¤ì— ë…¸ë“œë¥¼ ì œê±°í•œë‹¤
-	í•¨ìˆ˜ëª… : DeleteFromtail
-	ì¸ìì •ë³´ : LinkedList* , int
-	ë˜ëŒë¦¼ê°’ : Node * // ì˜¤ë¥˜ ì‹œ NULL
-	ì•Œê³ ë¦¬ì¦˜ : -
+	±â´É : µÚ¿¡ ³ëµå¸¦ Á¦°ÅÇÑ´Ù
+	ÇÔ¼ö¸í : DeleteFromtail
+	ÀÎÀÚÁ¤º¸ : LinkedList* , int
+	µÇµ¹¸²°ª : Node * // ¿À·ù ½Ã NULL
+	¾Ë°í¸®Áò : -
 */
 
 Node* DeleteFromTail(LinkedList* _ptList) {
-	if (_ptList->m_uCount == 0) {					//ë¹„ì–´ìˆìœ¼ë©´ ë¦¬í„´
+	if (_ptList->m_uCount == 0) {					//ºñ¾îÀÖÀ¸¸é ¸®ÅÏ
+		printf("ÇØ´ç ¸®½ºÆ®´Â ºñ¾îÀÖ½À´Ï´Ù.");
+		Sleep(1000);
 		return NULL;
 	}
 
@@ -217,27 +319,32 @@ Node* DeleteFromTail(LinkedList* _ptList) {
 	_ptList->m_pTail = _ptList->m_pCurrent->m_pPrevious;
 	_ptList->m_pTail->m_pNext = _ptList->m_pTail;
 	(_ptList->m_uCount)--;
-
+	if (_ptList->m_uCount == 0) {
+		_ptList->m_pHead = NULL;
+		_ptList->m_pTail = NULL;
+	}
 	_ptList->m_pCurrent->m_pNext = NULL;
-	_ptList->m_pCurrent->m_pPrevious = NULL;	//í˜¹ì‹œëª¨ë¥¼ ì ‘ê·¼ ë°©ì§€
+	_ptList->m_pCurrent->m_pPrevious = NULL;	//È¤½Ã¸ğ¸¦ Á¢±Ù ¹æÁö
 
 	deletedNode = _ptList->m_pCurrent;
-	_ptList->m_pCurrent = NULL;					//ì‚­ì œëœ ë…¸ë“œ ì ‘ê·¼ë¶ˆê°€
+	_ptList->m_pCurrent = NULL;					//»èÁ¦µÈ ³ëµå Á¢±ÙºÒ°¡
 
 	return deletedNode;
 }
 
 
 /*
-	ê¸°ëŠ¥ : ì„ì˜ ìœ„ì¹˜ ë…¸ë“œë¥¼ ì œê±°í•œë‹¤
-	í•¨ìˆ˜ëª… : Delete
-	ì¸ìì •ë³´ : LinkedList* , Node *
-	ë˜ëŒë¦¼ê°’ : Node * // ì˜¤ë¥˜ ì‹œ NULL
-	ì•Œê³ ë¦¬ì¦˜ : -
+	±â´É : ÀÓÀÇ À§Ä¡ ³ëµå¸¦ Á¦°ÅÇÑ´Ù
+	ÇÔ¼ö¸í : Delete
+	ÀÎÀÚÁ¤º¸ : LinkedList* , Node *
+	µÇµ¹¸²°ª : Node * // ¿À·ù ½Ã NULL
+	¾Ë°í¸®Áò : -
 */
 
 Node* Delete(LinkedList* _ptList, Node* _ptNode) {
 	if (!_ptList || !_ptNode) {
+		printf("¸®½ºÆ®°¡ ºñ¾îÀÖ°Å³ª, ÇØ´ç ³ëµå´Â ºñ¾îÀÖ½À´Ï´Ù.");
+		Sleep(3000);
 		return NULL;
 	}
 
@@ -251,14 +358,15 @@ Node* Delete(LinkedList* _ptList, Node* _ptNode) {
 		deletedNode = DeleteFromTail(_ptList);
 		return deletedNode;
 	}
-	int count =0;
+	int count = 0;
 	_ptList->m_pCurrent = _ptList->m_pHead;
 	while (_ptNode != _ptList->m_pCurrent && count < _ptList->m_uCount) {
 		_ptList->m_pCurrent = _ptList->m_pCurrent->m_pNext;
 		count++;
 	}
 	if (count == _ptList->m_uCount) {
-		printf("í•´ë‹¹ ë…¸ë“œë¥¼ ì°¾ì„ ìˆ˜ ì—†ìŠµë‹ˆë‹¤.\n");
+		printf("¸®½ºÆ®¿¡¼­ ÇØ´ç ³ëµå¸¦ Ã£À» ¼ö ¾ø½À´Ï´Ù.\n");
+		Sleep(3000);
 		return NULL;
 	}
 	else {
@@ -266,28 +374,35 @@ Node* Delete(LinkedList* _ptList, Node* _ptNode) {
 		_ptList->m_pCurrent->m_pNext->m_pPrevious = _ptList->m_pCurrent->m_pPrevious;
 
 		_ptList->m_pCurrent->m_pNext = NULL;
-		_ptList->m_pCurrent->m_pPrevious = NULL;	//í˜¹ì‹œëª¨ë¥¼ ì ‘ê·¼ ë°©ì§€
+		_ptList->m_pCurrent->m_pPrevious = NULL;	//È¤½Ã¸ğ¸¦ Á¢±Ù ¹æÁö
 
 		_ptList->m_uCount--;
 	}
 
 	deletedNode = _ptList->m_pCurrent;
-	_ptList->m_pCurrent = NULL;					//ì‚­ì œëœ ë…¸ë“œ ì ‘ê·¼ë¶ˆê°€
+	_ptList->m_pCurrent = NULL;					//»èÁ¦µÈ ³ëµå Á¢±ÙºÒ°¡
 
 	return deletedNode;
 
 }
 
 /*
-	ê¸°ëŠ¥ : ëª¨ë“  ë…¸ë“œë¥¼ ì œê±°í•œë‹¤
-	í•¨ìˆ˜ëª… : DeleteAll
-	ì¸ìì •ë³´ : LinkedList* 
-	ë˜ëŒë¦¼ê°’ : -
-	ì•Œê³ ë¦¬ì¦˜ : -
+	±â´É : ¸ğµç ³ëµå¸¦ Á¦°ÅÇÑ´Ù
+	ÇÔ¼ö¸í : DeleteAll
+	ÀÎÀÚÁ¤º¸ : LinkedList*
+	µÇµ¹¸²°ª : -
+	¾Ë°í¸®Áò : -
 */
 
 void DeleteAll(LinkedList* _ptList) {
+	if (!_ptList) {
+		printf("ÇØ´ç¸®½ºÆ®´Â ¸¸µé¾îÁöÁö ¾Ê¾Ò½À´Ï´Ù.");
+		Sleep(3000);
+		return;
+	}
 	if (_ptList->m_uCount == 0) {
+		printf("¸®½ºÆ®°¡ ºñ¾î ÀÖ½À´Ï´Ù.");
+		Sleep(1000);
 		return;
 	}
 
@@ -297,22 +412,22 @@ void DeleteAll(LinkedList* _ptList) {
 		free((_ptList)->m_pCurrent);
 		(_ptList)->m_uCount--;
 	}
-	
+
 	_ptList->m_pHead = NULL;
 	_ptList->m_pTail = NULL;
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////
 /*
-	ê¸°ëŠ¥ : ì„ì˜ ë…¸ë“œ ìˆ˜ì •
-	í•¨ìˆ˜ëª… : Modify
-	ì¸ìì •ë³´ : LinkedList* Node * int
-	ë˜ëŒë¦¼ê°’ : Node* // ì˜¤ë¥˜ì‹œ NULL
-	ì•Œê³ ë¦¬ì¦˜ : -
+	±â´É : ÀÓÀÇ ³ëµå ¼öÁ¤
+	ÇÔ¼ö¸í : Modify
+	ÀÎÀÚÁ¤º¸ : LinkedList* Node * int
+	µÇµ¹¸²°ª : Node* // ¿À·ù½Ã NULL
+	¾Ë°í¸®Áò : -
 */
 
 
-Node* Modify(LinkedList* _ptList,Node *_ptNode,int iObject) {
+Node* Modify(LinkedList* _ptList, Node* _ptNode, int iObject) {
 	if (!_ptList || !_ptNode) {
 		return NULL;
 	}
@@ -323,7 +438,7 @@ Node* Modify(LinkedList* _ptList,Node *_ptNode,int iObject) {
 		count++;
 	}
 	if (count == _ptList->m_uCount) {
-		printf("í•´ë‹¹ ë…¸ë“œë¥¼ ì°¾ì„ ìˆ˜ ì—†ìŠµë‹ˆë‹¤.\n");
+		printf("ÇØ´ç ³ëµå¸¦ Ã£À» ¼ö ¾ø½À´Ï´Ù.\n");
 		return NULL;
 	}
 	else {
@@ -335,23 +450,25 @@ Node* Modify(LinkedList* _ptList,Node *_ptNode,int iObject) {
 ////////////////////////////////////////////////////////////////////////////////////////
 
 /*
-	ê¸°ëŠ¥ : ë‹¨ì¼ ì„ í˜• íƒìƒ‰
-	í•¨ìˆ˜ëª… : LinearSearchByUnique
-	ì¸ìì •ë³´ : LinkedList* int
-	ë˜ëŒë¦¼ê°’ : Node *
-	ì•Œê³ ë¦¬ì¦˜ : -
+	±â´É : ´ÜÀÏ ¼±Çü Å½»ö
+	ÇÔ¼ö¸í : LinearSearchByUnique
+	ÀÎÀÚÁ¤º¸ : LinkedList* int
+	µÇµ¹¸²°ª : Node *
+	¾Ë°í¸®Áò : -
 */
 
 Node* LinearSearchByUnique(LinkedList* _ptList, int Object) {
 
 	if (!_ptList) {
+		printf("¸®½ºÆ®°¡ ºñ¾î ÀÖ½À´Ï´Ù.\n");
+		Sleep(500);
 		return NULL;
 	}
 
 
 	_ptList->m_pCurrent = _ptList->m_pHead;
 	for (int i = 0; i < _ptList->m_uCount; i++) {
-	
+
 		if (_ptList->m_pCurrent->m_iObject == Object) {
 			//Node* RTN = (Node*)malloc(sizeof(Node*));
 			Node* RTN;
@@ -361,17 +478,18 @@ Node* LinearSearchByUnique(LinkedList* _ptList, int Object) {
 		_ptList->m_pCurrent = _ptList->m_pCurrent->m_pNext;
 	}
 
-	printf("í•´ë‹¹ ìˆ«ìë¥¼ ì°¾ì„ ìˆ˜ ì—†ìŠµë‹ˆë‹¤.\n");
+	printf("ÇØ´ç ¼ıÀÚ¸¦ Ã£À» ¼ö ¾ø½À´Ï´Ù.\n");
+	Sleep(500);
 	return NULL;
 
 
 }
 /*
-	ê¸°ëŠ¥ : ë‹¤ì¤‘ ì„ í˜• íƒìƒ‰
-	í•¨ìˆ˜ëª… : LinearSearchByDuplicate
-	ì¸ìì •ë³´ : LinkedList* int int* Node***
-	ë˜ëŒë¦¼ê°’ : -
-	ì•Œê³ ë¦¬ì¦˜ : -
+	±â´É : ´ÙÁß ¼±Çü Å½»ö
+	ÇÔ¼ö¸í : LinearSearchByDuplicate
+	ÀÎÀÚÁ¤º¸ : LinkedList* int int* Node***
+	µÇµ¹¸²°ª : -
+	¾Ë°í¸®Áò : -
 */
 
 
@@ -384,18 +502,20 @@ void LinearSearchByDuplicate(LinkedList* _ptList, int Object, int* _resultSize, 
 	for (int i = 0; i < _ptList->m_uCount; i++) {
 
 		if (_ptList->m_pCurrent->m_iObject == Object) {
+			printf("%d ¹øÂ° ¿ä¼Ò", i);
 			Match_Count++;
+			Sleep(500);
 		}
 		_ptList->m_pCurrent = _ptList->m_pCurrent->m_pNext;
 	}
 	if (Match_Count == 0) {
-		return;						// ì—†ì„ ê²½ìš°
+		return;						// ¾øÀ» °æ¿ì
 	}
 
 
 	*_resultSize = Match_Count;
-
-	*_resultArray = (Node**)calloc(Match_Count, sizeof(Node*));	//ìˆ˜ë§Œí¼ ë™ì  í• ë‹¹
+	/*
+	*_resultArray = (Node**)calloc(Match_Count, sizeof(Node*));	//¼ö¸¸Å­ µ¿Àû ÇÒ´ç
 	_ptList->m_pCurrent = _ptList->m_pHead;
 
 	Match_Count = 0;
@@ -405,26 +525,34 @@ void LinearSearchByDuplicate(LinkedList* _ptList, int Object, int* _resultSize, 
 		}
 		_ptList->m_pCurrent = _ptList->m_pCurrent->m_pNext;
 	}
-
+	*/
 }
 
 /*
-ê¸°ëŠ¥ : ë‹¨ì¼ ì´ì§„ íƒìƒ‰
-í•¨ìˆ˜ëª… : BinarySearchByUnique
-ì¸ìì •ë³´ : LinkedList * int
-ë˜ëŒë¦¼ê°’ : ì°¾ìœ¼ë©´ Node* ëª»ì°¾ìœ¼ë©´ NULL
-ì•Œê³ ë¦¬ì¦˜ : -
+±â´É : ´ÜÀÏ ÀÌÁø Å½»ö
+ÇÔ¼ö¸í : BinarySearchByUnique
+ÀÎÀÚÁ¤º¸ : LinkedList * int
+µÇµ¹¸²°ª : Ã£À¸¸é Node* ¸øÃ£À¸¸é NULL
+¾Ë°í¸®Áò : -
 */
 Node* BinarySearchByUnique(LinkedList* _ptList, int Object) {
 	if (!_ptList) {
+		printf("¸®½ºÆ®°¡ ºñ¾î ÀÖ½À´Ï´Ù.\n");
+		Sleep(500);
+		return NULL;
+
+	}
+	if (_ptList->m_pHead == NULL) {
+		printf("¸®½ºÆ®°¡ ºñ¾î ÀÖ½À´Ï´Ù.\n");
+		Sleep(500);
 		return NULL;
 	}
 	int FoundFlag = 0;
 	int Start = 0;
 	int End = _ptList->m_uCount;
 	_ptList->m_pCurrent = NULL;
-	while ( Start<=End) {
-		
+	while (Start <= End) {
+
 		int Mid = (Start + End) / 2;
 		_ptList->m_pCurrent = _ptList->m_pHead;
 		for (int i = 0; i < Mid; i++) {
@@ -443,7 +571,8 @@ Node* BinarySearchByUnique(LinkedList* _ptList, int Object) {
 		}
 	}
 	if (FoundFlag == 0) {
-		printf("%d ë¦¬ìŠ¤íŠ¸ ë‚´ì— ì—†ìŠµë‹ˆë‹¤.\n", Object);
+		printf("%d ¸®½ºÆ® ³»¿¡ ¾ø½À´Ï´Ù.\n", Object);
+		Sleep(500);
 		return NULL;
 	}
 	Node* RTN = _ptList->m_pCurrent;
@@ -453,16 +582,23 @@ Node* BinarySearchByUnique(LinkedList* _ptList, int Object) {
 
 
 /*
-	ê¸°ëŠ¥ : ë‹¤ì¤‘ ì´ì§„ íƒìƒ‰
-	í•¨ìˆ˜ëª… : LinearSearchByDuplicate
-	ì¸ìì •ë³´ : LinkedList* int int* Node***
-	ë˜ëŒë¦¼ê°’ : -
-	ì•Œê³ ë¦¬ì¦˜ : -
+	±â´É : ´ÙÁß ÀÌÁø Å½»ö
+	ÇÔ¼ö¸í : LinearSearchByDuplicate
+	ÀÎÀÚÁ¤º¸ : LinkedList* int int* Node***
+	µÇµ¹¸²°ª : -
+	¾Ë°í¸®Áò : -
 */
 
 
 void BinarySearchByDuplicate(LinkedList* _ptList, int Object, int* _resultSize, Node*** _resultArray) {
 	if (!_ptList) {
+		printf("¸®½ºÆ®°¡ ºñ¾î ÀÖ½À´Ï´Ù.\n");
+		Sleep(500);
+		return;
+	}
+	if (_ptList->m_pHead == NULL) {
+		printf("¸®½ºÆ®°¡ ºñ¾î ÀÖ½À´Ï´Ù.\n");
+		Sleep(500);
 		return;
 	}
 	int FoundFlag = 0;
@@ -470,70 +606,93 @@ void BinarySearchByDuplicate(LinkedList* _ptList, int Object, int* _resultSize, 
 	int End = _ptList->m_uCount;
 	_ptList->m_pCurrent = NULL;
 
+	int S_tmp = 0;
+	printf("\n°¡Àå ¿ŞÂÊ ¿ä¼Ò Ã£±â ½ÃÀÛ.\n");
+	while (Start < End) {
 
-	while (Start <= End) {
-		
 
 		int Mid = (Start + End) / 2;
-		if (FoundFlag == 1) {
-			Node* Start_tmp = _ptList->m_pCurrent;
-			Node* End_tmp = _ptList->m_pCurrent;
-			while (Start_tmp->m_iObject == Object && End_tmp->m_iObject == Object) {
-				Node* Start_tmp = _ptList->m_pCurrent;
-				Node* End_tmp = _ptList->m_pCurrent;
-			for (int i = 0; i < Mid - Start; i++) {
-				Start_tmp = Start_tmp->m_pPrevious;
-			}
-			for (int i = 0; i < End - Mid; i++) {
-				End_tmp = End_tmp->m_pNext;
-			}
-			
-				if (Start_tmp->m_iObject == Object && End_tmp->m_iObject > Object) {
-					End--;
-				}
-				else if (Start_tmp->m_iObject < Object && End_tmp->m_iObject > Object) {
-					Start++;
-					End--;
-				}
-				else if (Start_tmp->m_iObject < Object && End_tmp->m_iObject == Object) {
-					Start++;
-				}
-			}
-			break;
+
+		_ptList->m_pCurrent = _ptList->m_pHead;
+		for (int i = 0; i < Mid; i++) {
+			_ptList->m_pCurrent = _ptList->m_pCurrent->m_pNext;
 		}
+
+		if (Object == _ptList->m_pCurrent->m_iObject && FoundFlag == 0) {
+			FoundFlag = 1;
+
+
+		}
+		if (Object <= _ptList->m_pCurrent->m_iObject) {
+			End = Mid;
+			if (Object == _ptList->m_pCurrent->m_iObject) {
+				printf("%d ", Mid);
+			}
+		}
+		else {
+			Start = Mid + 1;
+		}
+	}
+	S_tmp = Start;
+	printf("\n°¡Àå ¿À¸¥ÂÊ ¿ä¼Ò Ã£±â ½ÃÀÛ.\n");
+	Start = 0;
+	End = _ptList->m_uCount;
+	Node* Prev_tmp = NULL;
+	while (Start < End) {
+	
+
+		int Mid = (Start + End) / 2;
+
 		_ptList->m_pCurrent = _ptList->m_pHead;
 		for (int i = 0; i < Mid; i++) {
 			_ptList->m_pCurrent = _ptList->m_pCurrent->m_pNext;
 		}
 		
-		if (Object == _ptList->m_pCurrent->m_iObject) {
+		
+		if (Object == _ptList->m_pCurrent->m_iObject && FoundFlag == 0) {
 			FoundFlag = 1;
-			
-			
+
+
 		}
-		if (Object < _ptList->m_pCurrent->m_iObject) {
+		if (Object >= _ptList->m_pCurrent->m_iObject) {
+			Start = Mid;
+			if (Object == _ptList->m_pCurrent->m_iObject) {
+				printf("%d ", Mid);
+			}
+		}
+		else {
 			End = Mid - 1;
 		}
-		else if(Object > _ptList->m_pCurrent->m_iObject){
-			Start = Mid + 1;
+		if (Prev_tmp == _ptList->m_pCurrent) {
+			if (_ptList->m_pCurrent->m_pNext->m_iObject == Object) {
+				if (_ptList->m_pTail != _ptList->m_pCurrent) {
+					Start = Mid + 1;
+					break;
+				}
+			}
+			Start = Mid;
+			break;
 		}
-		
-
+		Prev_tmp = _ptList->m_pCurrent;
 	}
+
 	if (FoundFlag == 0) {
-		printf("%d ë¦¬ìŠ¤íŠ¸ ë‚´ì— ì—†ìŠµë‹ˆë‹¤.\n", Object);
+		printf("%d Àº(´Â) ¸®½ºÆ® ³»¿¡ ¾ø½À´Ï´Ù.\n", Object);
+		Sleep(2000);
 		return;
 	}
 
+	printf("%d\n", Start);
 
-
-	*_resultSize = End - Start+1;
-	printf("%d ê°œ ì°¾ìŒ\n", *_resultSize);
-	*_resultArray = (Node**)calloc(*_resultSize, sizeof(Node*));	//ìˆ˜ë§Œí¼ ë™ì  í• ë‹¹
-
-	_ptList->m_pCurrent = _ptList->m_pHead;
+	printf("%dÀÇ ÀÖ´Â ¹üÀ§ : %d~%d   \n", Object, S_tmp, Start);
+	*_resultSize = Start - S_tmp + 1;
+	printf("%d °³ Ã£À½\n", *_resultSize);
+	Sleep(5000);
+	//*_resultArray = (Node**)calloc(*_resultSize, sizeof(Node*));	//¼ö¸¸Å­ µ¿Àû ÇÒ´ç
 	
-	int Count =0;
+	//_ptList->m_pCurrent = _ptList->m_pHead;
+	/*
+	int Count = 0;
 	int i = 0;
 	while (Count < _ptList->m_uCount) {
 		if (Count >= Start && Count <= End) {
@@ -542,7 +701,7 @@ void BinarySearchByDuplicate(LinkedList* _ptList, int Object, int* _resultSize, 
 		_ptList->m_pCurrent = _ptList->m_pCurrent->m_pNext;
 		Count++;
 	}
-
+	*/
 	_ptList->m_pCurrent = NULL;
 	return;
 
@@ -551,11 +710,11 @@ void BinarySearchByDuplicate(LinkedList* _ptList, int Object, int* _resultSize, 
 
 /////////////////////////////////////////////////////////////////////////////////////////
 /*
-	ê¸°ëŠ¥ : ê°™ì€ LinkedList ì— ìˆëŠ” Node ìœ„ì¹˜ ë³€ê²½
-	í•¨ìˆ˜ëª… : Change
-	ì¸ìì •ë³´ : LinkedList* Node* Node*
-	ë˜ëŒë¦¼ê°’ : -
-	ì•Œê³ ë¦¬ì¦˜ : -
+	±â´É : °°Àº LinkedList ¿¡ ÀÖ´Â Node À§Ä¡ º¯°æ
+	ÇÔ¼ö¸í : Change
+	ÀÎÀÚÁ¤º¸ : LinkedList* Node* Node*
+	µÇµ¹¸²°ª : -
+	¾Ë°í¸®Áò : -
 */
 void Change(LinkedList* _ptList, Node* _ptNode1, Node* _ptNode2) {
 	if (!_ptList || !_ptNode1 || !_ptNode2 || _ptNode1 == _ptNode2) return;
@@ -573,7 +732,7 @@ void Change(LinkedList* _ptList, Node* _ptNode1, Node* _ptNode2) {
 	}
 
 	if (Node1_flag != 1 || Node2_flag != 1) {
-		printf("ë‘ ë…¸ë“œë¥¼ ê°™ì€ ë¦¬ìŠ¤íŠ¸ì—ì„œ ì°¾ì„ ìˆ˜ ì—†ìŠµë‹ˆë‹¤.\n");
+		printf("µÎ ³ëµå¸¦ °°Àº ¸®½ºÆ®¿¡¼­ Ã£À» ¼ö ¾ø½À´Ï´Ù.\n");
 		return;
 	}
 
@@ -583,15 +742,15 @@ void Change(LinkedList* _ptList, Node* _ptNode1, Node* _ptNode2) {
 	Node* Next2 = _ptNode2->m_pNext;
 
 
-	if (_ptNode1 == _ptList->m_pHead) {			//1ì´ í—¤ë“œ
+	if (_ptNode1 == _ptList->m_pHead) {			//1ÀÌ Çìµå
 		_ptList->m_pHead = _ptNode2;
 
 
 		Prev1 = _ptNode2;
 
-		
+
 	}
-	else if(_ptNode2 == _ptList->m_pHead) {		//2ê°€ í—¤ë“œ 
+	else if (_ptNode2 == _ptList->m_pHead) {		//2°¡ Çìµå 
 		_ptList->m_pHead = _ptNode1;
 
 		Prev2 = _ptNode1;
@@ -613,12 +772,12 @@ void Change(LinkedList* _ptList, Node* _ptNode1, Node* _ptNode2) {
 
 	}
 
-	if (_ptNode1->m_pNext == _ptNode2) { //ë¶™ì–´ìˆì„ë–„
+	if (_ptNode1->m_pNext == _ptNode2) { //ºÙ¾îÀÖÀ»‹š
 		Prev2 = _ptNode2;
 		Next1 = _ptNode1;
 	}
 
-	if (_ptNode2->m_pNext == _ptNode1) {	//ë¶™ì–´ìˆì„ë•Œ
+	if (_ptNode2->m_pNext == _ptNode1) {	//ºÙ¾îÀÖÀ»¶§
 		Prev1 = _ptNode1;
 		Next2 = _ptNode2;
 	}
@@ -641,7 +800,7 @@ void SortByBubble(LinkedList* _ptList) {
 	if (!_ptList) return;
 	for (int i = _ptList->m_uCount - 1; i > 0; i--) {
 		_ptList->m_pCurrent = _ptList->m_pHead;
-		
+
 		for (int j = 0; j < i; j++) {
 			if (_ptList->m_pCurrent->m_iObject > _ptList->m_pCurrent->m_pNext->m_iObject) {
 				Node* tmpCurrent = _ptList->m_pCurrent;
@@ -650,36 +809,36 @@ void SortByBubble(LinkedList* _ptList) {
 				_ptList->m_pCurrent = tmpCurrent;
 			}
 			else { _ptList->m_pCurrent = _ptList->m_pCurrent->m_pNext; }
-			
+
 		}
-		
+
 	}
 }
 
 void SortByInsertion(LinkedList* _ptList) {
 	if (!_ptList) return;
 	if (_ptList->m_uCount <= 1) {
-		return;									//ì •ë ¬ì´ í•„ìš”ì—†ëŠ” ê²½ìš°
+		return;									//Á¤·ÄÀÌ ÇÊ¿ä¾ø´Â °æ¿ì
 	}
 	int Sorted_Index = 1;
-	
+
 
 
 	while (Sorted_Index < _ptList->m_uCount) {
 		Node* tmp = _ptList->m_pHead;
-		
+
 		for (int i = 0; i < Sorted_Index; i++) {
 			tmp = tmp->m_pNext;
 		}
 		_ptList->m_pCurrent = tmp->m_pPrevious;
-		while (tmp->m_pPrevious != tmp && _ptList->m_pCurrent->m_iObject > tmp->m_iObject)  {		// tmp ë¶€í„° í—¤ë“œê¹Œì§€ // tmp ê°€ ë” ì‘ìœ¼ë©´ ì•ê³¼ êµí™˜
+		while (tmp->m_pPrevious != tmp && _ptList->m_pCurrent->m_iObject > tmp->m_iObject) {		// tmp ºÎÅÍ Çìµå±îÁö // tmp °¡ ´õ ÀÛÀ¸¸é ¾Õ°ú ±³È¯
 			_ptList->m_pCurrent = tmp->m_pPrevious;
-			
-			
+
+
 			Change(_ptList, tmp, _ptList->m_pCurrent);
 			_ptList->m_pCurrent = tmp->m_pPrevious;
-			
-			
+
+
 		}
 
 		Sorted_Index++;
@@ -689,7 +848,7 @@ void SortByInsertion(LinkedList* _ptList) {
 void SortBySelection(LinkedList* _ptList) {
 	if (!_ptList) return;
 	if (_ptList->m_uCount <= 1) {
-		return;									//ì •ë ¬ì´ í•„ìš”ì—†ëŠ” ê²½ìš°
+		return;									//Á¤·ÄÀÌ ÇÊ¿ä¾ø´Â °æ¿ì
 	}
 	int Sorted_Index = 0;
 
@@ -700,11 +859,11 @@ void SortBySelection(LinkedList* _ptList) {
 	while (Sorted_Index < _ptList->m_uCount) {
 		Least = _ptList->m_pHead;
 
-	
+
 		for (int i = 0; i < Sorted_Index; i++) {
-				Least = Least->m_pNext;
+			Least = Least->m_pNext;
 		}
-		
+
 		Node* Bottom = Least;
 
 		_ptList->m_pCurrent = Least->m_pNext;
@@ -712,11 +871,11 @@ void SortBySelection(LinkedList* _ptList) {
 		for (int i = Sorted_Index; i < _ptList->m_uCount; i++) {
 			if (Least->m_iObject > _ptList->m_pCurrent->m_iObject) {
 				Least = _ptList->m_pCurrent;
-				
+
 			}
 			_ptList->m_pCurrent = _ptList->m_pCurrent->m_pNext;
 		}
-		
+
 		Change(_ptList, Least, Bottom);
 		Sorted_Index++;
 	}

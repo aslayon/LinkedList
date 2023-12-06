@@ -1,6 +1,10 @@
+#define _CRT_SECURE_NO_WARNINGS
 #include <stdio.h>
 #include <stdlib.h>
 #include "LinkedList_int.h"
+#include <CoreWindow.h>
+#include <windows.h>
+#define Max 10
 
 void Create(LinkedList** _ptList);
 void Destroy(LinkedList** _ptList);
@@ -9,6 +13,8 @@ Node* Read(LinkedList* _ptList, unsigned int i);
 void Traversal(LinkedList* _ptList);
 Node* AppendFromHead(LinkedList* _ptList, int _iObject);
 Node* AppendFromTail(LinkedList* _ptList, int _iObject);
+Node* InsertBefore(LinkedList* _ptList, Node*, int Object);
+Node* InsertAfter(LinkedList* _ptList, Node* _ptNode, int Object);
 Node* DeleteFromHead(LinkedList* _ptList);
 Node* DeleteFromTail(LinkedList* _ptList);
 Node* Delete(LinkedList* _ptList, Node* _ptNode);
@@ -24,119 +30,462 @@ void SortByInsertion(LinkedList* _ptList);
 void SortBySelection(LinkedList* _ptList);
 
 
+void cur(short x, short y)		//화면의 원하는 x, y좌표로 보냄
+{
+	COORD pos = { x, y };
+	SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE), pos);
+}
+
+
 
 int main() {
-    LinkedList* myList;
-    Create(&myList);
+	char Cont;
+	int flag = 0;
+	LinkedList* Lists[Max] = { NULL, };
+	int List_num = 0;
+	int Num_tmp = 0;
+	int Num_tmp2 = 0;
+	Node* Node_tmp = NULL;
+	int SearchResultSize;
+	Node** SearchSortResultArr;
+	COORD pos = { 0,0 };
 
-    // 노드 추가
-    AppendFromHead(myList, 30);
-    AppendFromHead(myList, 20);
-    AppendFromHead(myList, 40);
-    AppendFromHead(myList, 10);
-    AppendFromHead(myList, 50);
-    AppendFromHead(myList, 35);
-    AppendFromHead(myList, 25);
-    AppendFromHead(myList, 45);
-    AppendFromHead(myList, 15);
-    AppendFromHead(myList, 30);
+	while (flag == 0) {
+		system("cls");
+		SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE), pos);
+		printf("///////////////////////////////////////////////////////////////////////\n");
+		printf("1. 관리 구조 생성\t\t2. 관리구조 소멸\n3. 임의 위치 값 읽기\t\t4. 노드 순회\n");
+		printf("5. 앞 노드 추가\t\t\t6. 뒤 노드 추가\n");
+		printf("7. 기준 노드 앞 삽입\t\t8. 기준 노드 뒤 삽입\n");
+		printf("9. 앞 노드 삭제\t\t\t10. 뒤 노드 삭제\n");
+		printf("11. 임의 위치 삭제\t\t12. 모든 노드 삭제\n");
+		printf("13. 임의 노드 수정\n14. 단일 선형 탐색\t\t");
+		printf("15. 다중 선형 탐색\n16. 단일 이진 탐색\t\t");
+		printf("17. 다중 이진 탐색\n18. 거품 정렬\t");
+		printf("19. 삽입 정렬\t20. 선택 정렬\n21. 종료\n");
+		printf("///////////////////////////////////////////////////////////////////////\n");
+		printf("리스트는 최대 10개까지 생성 가능.");
+		printf("\n\n");
 
-    // 리스트 순회
-    printf("리스트 순회:\n");
-    Traversal(myList);
+		if (!Node_tmp) Node_tmp == NULL;
 
-    // 특정 값에 대한 선형 탐색
-    int searchValueLinear = 40;
-    Node* resultNodeLinear = LinearSearchByUnique(myList, searchValueLinear);
+		if (List_num == 0) {
+			printf("None..\n");
+			printf("\n");
+		}
+		else {
+			printf("현재 존재하는 리스트들 _\n");
+			for (int i = 0; i < Max; i++) {
+				int count = 0;
+				if (Lists[i] != NULL) {
+					printf("\nList %d :", i);
+					if (!Lists[i]->m_pHead) { printf("Empty"); continue; }
+					Node* curr = Lists[i]->m_pHead;
+					while (count < Lists[i]->m_uCount) {
+						if (curr == Node_tmp) {
+							printf(" '%d' ", curr->m_iObject);
+							curr = curr->m_pNext;
+							count++;
+							continue;
+						}
+						printf(" %d ", curr->m_iObject);
+						curr = curr->m_pNext;
+						count++;
+					}
 
+				}
+				else printf("\n@ ");
 
-    if (resultNodeLinear != NULL) {
-        printf("\n%d를 선형 탐색한 결과: %p <- %d -> %p\n", searchValueLinear,resultNodeLinear->m_pPrevious, resultNodeLinear->m_iObject,resultNodeLinear->m_pNext);
-    }
-    // 특정 값에 대한 이진 탐색
-
-    SortByBubble(myList);
-    printf("\n버블 정렬 후:\n");
-    Traversal(myList);
-    int searchValueBinary = 40;
-
-    Node* resultNodeBinary = BinarySearchByUnique(myList, searchValueBinary);
-
-    if (resultNodeBinary != NULL) {
-        printf("%d를 이진 탐색한 결과: %p <- %d -> %p\n" , searchValueBinary,resultNodeBinary->m_pPrevious, resultNodeBinary->m_iObject, resultNodeBinary->m_pNext);
-    }
-
-    // 노드 수정
-    Node* nodeToModify = myList->m_pHead->m_pNext; // 두 번째 노드 선택
-    int newValue = 99;
-    Modify(myList, nodeToModify, newValue);
-    printf("\n노드 수정 결과:\n");
-    Traversal(myList);
-
-    // 정렬 (삽입 정렬 사용)
-    printf("\n삽입 정렬 후:\n");
-    SortByInsertion(myList);
-    Traversal(myList);
-
-    // 노드 삭제
-    Node* nodeToDelete = myList->m_pHead->m_pNext; // 두 번째 노드 선택
-    Node* deletedNode = Delete(myList, nodeToDelete);
-    printf("\n노드 삭제 결과:\n");
-    Traversal(myList);
-
-    AppendFromTail(myList, 10);
-    AppendFromHead(myList, 50);
-    AppendFromTail(myList, 35);
-    AppendFromTail(myList, 25);
-    AppendFromTail(myList, 45);
-    AppendFromTail(myList, 15);
-    AppendFromTail(myList, 30);
-
-    Traversal(myList);
-    printf("\n선택 정렬 후:\n");
-    SortBySelection(myList);
-
-    Traversal(myList);
-    //앞뒤 삭제
-    printf("\n헤드 2개 테일 1개 삭제 후:\n");
-    DeleteFromHead(myList);
-    DeleteFromHead(myList);
-    DeleteFromTail(myList);
-
-    Traversal(myList);
-
-    // 메모리 해제
-    
-    int searchValue = 30;
-
-    int linearResultSize;
-    Node** linearResultArray;
-    LinearSearchByDuplicate(myList, searchValue, &linearResultSize, &linearResultArray);
-
-    printf("선형 다중:\n");
-    for (int i = 0; i < linearResultSize; i++) {
-        printf("Node %d: %p <- %d -> %p\n", i + 1,linearResultArray[i]->m_pPrevious, linearResultArray[i]->m_iObject, linearResultArray[i]->m_pNext);
-    }
-
-    // 메모리 해제
-    free(linearResultArray);
-
-    // Binary Search 테스트
-    int binaryResultSize;
-    Node** binaryResultArray;
-    BinarySearchByDuplicate(myList, searchValue, &binaryResultSize, &binaryResultArray);
-
-    printf("이진 다중:\n");
-    for (int i = 0; i < binaryResultSize; i++) {
-        printf("Node %d: %p <- %d -> %p\n", i + 1,binaryResultArray[i]->m_pPrevious, binaryResultArray[i]->m_iObject, binaryResultArray[i]->m_pNext);
-    }
-
-    // 메모리 해제
-    free(binaryResultArray);
-
-    // 리스트 및 노드 메모리 해제
-    Destroy(&myList);
+			}
+			printf("\n\n");
+		}
 
 
-    return 0;
+
+
+		int Selection = -1;
+
+		printf("\n기능 선택:");
+		int err = scanf("%d", &Selection);
+		if (err != 1) {
+			printf("\n잘못된 입력\n");
+			Sleep(300);
+			while(getchar() != '\n')
+			continue;
+
+		}
+		printf("\n\n");
+		if (Selection == 1) {
+			if (List_num < Max) {
+				for (int i = 0; i < Max; i++) {
+					if (Lists[i] == NULL) {
+						Create(&Lists[i]);
+						List_num++;
+						break;
+
+					}
+				}
+				printf("%d \n", List_num);
+			}
+			else printf("Full");
+		}
+		if (Selection == 2) {
+			printf("지울 리스트 ? :");
+			 err = scanf("%d", &Num_tmp);
+			if (err != 1) {
+				printf("\n잘못된 입력\n");
+				Sleep(300);
+				while (getchar() != '\n') {}
+				continue;
+
+			}
+			Destroy(&Lists[Num_tmp]);
+			List_num--;
+
+		}
+
+		if (Selection == 3) {
+			printf("몇번째 리스트에서 ? :");
+			 err = scanf("%d", &Num_tmp2);
+			if (err != 1) {
+				printf("\n잘못된 입력\n");
+				Sleep(300);
+				while (getchar() != '\n') {}
+				continue;
+
+			}
+			printf("몇번째 노드를 ? :");
+			 err = scanf("%d", &Num_tmp);
+			if (err != 1) {
+				printf("\n잘못된 입력\n");
+				Sleep(300);
+				while (getchar() != '\n') {}
+				continue;
+
+			}
+			Node_tmp = Read(Lists[Num_tmp2], Num_tmp);
+		}
+		if (Selection == 4) {
+			printf("몇번째 리스트 ? :");
+			 err = scanf("%d", &Num_tmp);
+			if (err != 1) {
+				printf("\n잘못된 입력\n");
+				Sleep(300);
+				while (getchar() != '\n') {}
+				continue;
+
+			}
+			Traversal(Lists[Num_tmp]);
+		}
+		if (Selection == 5) {
+			printf("몇번째 리스트 ? :");
+			 err = scanf("%d", &Num_tmp);
+			if (err != 1) {
+				printf("\n잘못된 입력\n");
+				Sleep(300);
+				while (getchar() != '\n') {}
+				continue;
+
+			}
+			printf("넣을 Object ? :");
+			 err = scanf("%d", &Num_tmp2);
+			if (err != 1) {
+				printf("\n잘못된 입력\n");
+				Sleep(300);
+				while (getchar() != '\n') {}
+				continue;
+
+			}
+			if (Lists[Num_tmp] != NULL) {
+				Node_tmp = AppendFromHead(Lists[Num_tmp], Num_tmp2);
+			}
+			else {
+				printf("리스트 없음");
+				Sleep(500);
+
+			}
+		}
+		if (Selection == 6) {
+			printf("몇번째 리스트 ? :");
+			 err = scanf("%d", &Num_tmp);
+			if (err != 1) {
+				printf("\n잘못된 입력\n");
+				Sleep(300);
+				while (getchar() != '\n') {}
+				continue;
+
+			}
+			printf("넣을 Object ? :");
+			 err = scanf("%d", &Num_tmp2);
+			if (err != 1) {
+				printf("\n잘못된 입력\n");
+				Sleep(300);
+				while (getchar() != '\n') {}
+				continue;
+
+			}
+			if (Lists[Num_tmp] != NULL) {
+				Node_tmp = AppendFromTail(Lists[Num_tmp], Num_tmp2);
+			}
+			else {
+				printf("리스트 없음");
+				Sleep(500);
+
+			}
+
+		}
+		if (Selection == 7) {
+			printf("몇번째 리스트 ? :");
+			 err = scanf("%d", &Num_tmp);
+			if (err != 1) {
+				printf("\n잘못된 입력\n");
+				Sleep(300);
+				while (getchar() != '\n') {}
+				continue;
+
+			}
+			printf("넣을 Object ? :");
+			 err = scanf("%d", &Num_tmp2);
+			if (err != 1) {
+				printf("\n잘못된 입력\n");
+				Sleep(300);
+				while (getchar() != '\n') {}
+				continue;
+
+			}
+			Node_tmp = InsertBefore(Lists[Num_tmp], Node_tmp, Num_tmp2);
+		}
+		if (Selection == 8) {
+			printf("몇번째 리스트 ? :");
+			 err = scanf("%d", &Num_tmp);
+			if (err != 1) {
+				printf("\n잘못된 입력\n");
+				Sleep(300);
+				while (getchar() != '\n') {}
+				continue;
+
+			}
+			printf("넣을 Object ? :");
+			 err = scanf("%d", &Num_tmp2);
+			if (err != 1) {
+				printf("\n잘못된 입력\n");
+				Sleep(300);
+				while (getchar() != '\n') {}
+				continue;
+
+			}
+			Node_tmp = InsertAfter(Lists[Num_tmp], Node_tmp, Num_tmp2);
+		}
+		if (Selection == 9) {
+			printf("몇번째 리스트 ? :");
+			 err = scanf("%d", &Num_tmp);
+			if (err != 1) {
+				printf("\n잘못된 입력\n");
+				Sleep(300);
+				while (getchar() != '\n') {}
+				continue;
+
+			}
+			Node_tmp = DeleteFromHead(Lists[Num_tmp]);
+			free(Node_tmp);
+			Node_tmp = NULL;
+		}
+		if (Selection == 10) {
+			printf("몇번째 리스트 ? :");
+			 err = scanf("%d", &Num_tmp);
+			if (err != 1) {
+				printf("\n잘못된 입력\n");
+				Sleep(300);
+				while (getchar() != '\n') {}
+				continue;
+
+			}
+			Node_tmp = DeleteFromTail(Lists[Num_tmp]);
+			free(Node_tmp);
+			Node_tmp = NULL;
+		}
+		if (Selection == 11) {
+			printf("몇번째 리스트 ? :");
+			 err = scanf("%d", &Num_tmp);
+			if (err != 1) {
+				printf("\n잘못된 입력\n");
+				Sleep(300);
+				while (getchar() != '\n') {}
+				continue;
+
+			}
+			Node_tmp = Delete(Lists[Num_tmp], Node_tmp);
+			free(Node_tmp);
+			Node_tmp = NULL;
+		}
+		if (Selection == 12) {
+			printf("몇번째 리스트 ? :");
+			 err = scanf("%d", &Num_tmp);
+			if (err != 1) {
+				printf("\n잘못된 입력\n");
+				Sleep(300);
+				while (getchar() != '\n') {}
+				continue;
+
+			}
+			DeleteAll(Lists[Num_tmp]);
+		}
+		if (Selection == 13) {
+			printf("몇번째 리스트 ? :");
+			 err = scanf("%d", &Num_tmp);
+			if (err != 1) {
+				printf("\n잘못된 입력\n");
+				Sleep(300);
+				while (getchar() != '\n') {}
+				continue;
+
+			}
+			printf("수정할 Object ? :");
+			 err = scanf("%d", &Num_tmp2);
+			if (err != 1) {
+				printf("\n잘못된 입력\n");
+				Sleep(300);
+				while (getchar() != '\n') {}
+				continue;
+
+			}
+			Node_tmp = Modify(Lists[Num_tmp], Node_tmp, Num_tmp2);
+		}
+		if (Selection == 14) {
+			printf("몇번째 리스트 ? :");
+			 err = scanf("%d", &Num_tmp);
+			if (err != 1) {
+				printf("\n잘못된 입력\n");
+				Sleep(300);
+				while (getchar() != '\n') {}
+				continue;
+
+			}
+			printf("찾을 Object ? :");
+			 err = scanf("%d", &Num_tmp2);
+			if (err != 1) {
+				printf("\n잘못된 입력\n");
+				Sleep(300);
+				while (getchar() != '\n') {}
+				continue;
+
+			}
+			Node_tmp = LinearSearchByUnique(Lists[Num_tmp], Num_tmp2);
+		}
+		if (Selection == 15) {
+			printf("몇번째 리스트 ? :");
+			 err = scanf("%d", &Num_tmp);
+			if (err != 1) {
+				printf("\n잘못된 입력\n");
+				Sleep(300);
+				while (getchar() != '\n') {}
+				continue;
+
+			}
+			printf("찾을 Object ? :");
+			 err = scanf("%d", &Num_tmp2);
+			if (err != 1) {
+				printf("\n잘못된 입력\n");
+				Sleep(300);
+				while (getchar() != '\n') {}
+				continue;
+
+			}
+			LinearSearchByDuplicate(Lists[Num_tmp], Num_tmp2, &SearchResultSize, &SearchSortResultArr);
+			
+		}
+		if (Selection == 16) {
+			printf("몇번째 리스트 ? :");
+			 err = scanf("%d", &Num_tmp);
+			if (err != 1) {
+				printf("\n잘못된 입력\n");
+				Sleep(300);
+				while (getchar() != '\n') {}
+				continue;
+
+			}
+			printf("찾을 Object ? :");
+			 err = scanf("%d", &Num_tmp2);
+			if (err != 1) {
+				printf("\n잘못된 입력\n");
+				Sleep(300);
+				while (getchar() != '\n') {}
+				continue;
+
+			}
+			Node_tmp = BinarySearchByUnique(Lists[Num_tmp], Num_tmp2);
+		}
+		if (Selection == 17) {
+			printf("몇번째 리스트 ? :");
+			 err = scanf("%d", &Num_tmp);
+			if (err != 1) {
+				printf("\n잘못된 입력\n");
+				Sleep(300);
+				while (getchar() != '\n') {}
+				continue;
+
+			}
+			printf("찾을 Object ? :");
+			 err = scanf("%d", &Num_tmp2);
+			if (err != 1) {
+				printf("\n잘못된 입력\n");
+				Sleep(300);
+				while (getchar() != '\n') {}
+				continue;
+
+			}
+			BinarySearchByDuplicate(Lists[Num_tmp], Num_tmp2, &SearchResultSize, &SearchSortResultArr);
+			
+		}
+		if (Selection == 18) {
+			printf("몇번째 리스트 ? :");
+			 err = scanf("%d", &Num_tmp);
+			if (err != 1) {
+				printf("\n잘못된 입력\n");
+				Sleep(300);
+				while (getchar() != '\n') {}
+				continue;
+
+			}
+			SortByBubble(Lists[Num_tmp]);
+
+		}
+		if (Selection == 19) {
+			printf("몇번째 리스트 ? :");
+			 err = scanf("%d", &Num_tmp);
+			if (err != 1) {
+				printf("\n잘못된 입력\n");
+				Sleep(300);
+				while (getchar() != '\n') {}
+				continue;
+
+			}
+			SortByInsertion(Lists[Num_tmp]);
+
+		}
+		if (Selection == 20) {
+			printf("몇번째 리스트 ? :");
+			 err = scanf("%d", &Num_tmp);
+			if (err != 1) {
+				printf("\n잘못된 입력\n");
+				Sleep(300);
+				while (getchar() != '\n') {}
+				continue;
+
+			}
+			SortBySelection(Lists[Num_tmp]);
+
+		}
+		if (Selection == 21) {
+			printf("종료\n");
+			flag = 1;
+
+
+		}
+
+
+	}
+
+
+	return 0;
 }
