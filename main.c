@@ -8,6 +8,7 @@
 
 
 
+
 void Create(LinkedList** _ptList);
 void Destroy(LinkedList** _ptList);
 Node* GetNode(int _iObject);
@@ -20,6 +21,7 @@ Node* InsertAfter(LinkedList* _ptList, Node* _ptNode, int Object);
 Node* DeleteFromHead(LinkedList* _ptList);
 Node* DeleteFromTail(LinkedList* _ptList);
 Node* Delete(LinkedList* _ptList, Node* _ptNode);
+Node* DeleteNode_Count(LinkedList* _ptList, int count);
 void DeleteAll(LinkedList* _ptList);
 Node* Modify(LinkedList* _ptList, Node* _ptNode, int iObject);
 Node* LinearSearchByUnique(LinkedList* _ptList, int Object);
@@ -30,7 +32,7 @@ void Change(LinkedList* _ptList, Node* _ptNode1, Node* _ptNode2);
 void SortByBubble(LinkedList* _ptList);
 void SortByInsertion(LinkedList* _ptList);
 void SortBySelection(LinkedList* _ptList);
-
+Node* Modify_by_Count(LinkedList* _ptList, int count, int iObject);
 
 void cur(short x, short y)		//화면의 원하는 x, y좌표로 보냄
 {
@@ -41,12 +43,15 @@ void cur(short x, short y)		//화면의 원하는 x, y좌표로 보냄
 
 
 int main() {
+	long long L =(-2147483647 -1 );
+	int R = 2147483647;
 	char Cont;
 	int flag = 0;
 	LinkedList* Lists[Max] = { NULL, };
 	int List_num = 0;
 	long long Num_tmp = 0;
 	long long Num_tmp2 = 0;
+	long long Num_tmp3 = 0;
 	Node* Node_tmp = NULL;
 	int SearchResultSize;
 	Node** SearchSortResultArr;
@@ -59,8 +64,8 @@ int main() {
 		printf("5. 앞 노드 추가\t\t\t6. 뒤 노드 추가\n");
 		printf("7. 기준 노드 앞 삽입\t\t8. 기준 노드 뒤 삽입\n");
 		printf("9. 앞 노드 삭제\t\t\t10. 뒤 노드 삭제\n");
-		printf("11. 기준 위치 삭제\t\t12. 모든 노드 삭제\n");
-		printf("13. 기준 노드 수정\n14. 단일 선형 탐색\t\t");
+		printf("11. 기준 위치 삭제\t\t22. 임의 노드 삭제\t\t12. 모든 노드 삭제\n");
+		printf("13. 기준 노드 수정\t\t23. 임의 노드 수정\n14. 단일 선형 탐색\t\t");
 		printf("15. 다중 선형 탐색\n16. 단일 이진 탐색\t\t");
 		printf("17. 다중 이진 탐색\n18. 거품 정렬\t");
 		printf("19. 삽입 정렬\t20. 선택 정렬\n21. 종료\n");
@@ -214,7 +219,7 @@ int main() {
 
 			}
 			else {
-				if (Num_tmp2 >= INT_MIN && Num_tmp2 <= INT_MAX) {
+				if (Num_tmp2 >= L && Num_tmp2 <= R) {
 
 				}
 				else {
@@ -262,7 +267,7 @@ int main() {
 
 			}
 			else {
-				if (Num_tmp2 >= INT_MIN && Num_tmp2 <= INT_MAX) {
+				if (Num_tmp2 >= L && Num_tmp2 <= R) {
 
 				}
 				else {
@@ -311,7 +316,7 @@ int main() {
 
 			}
 			else {
-				if (Num_tmp2 >= INT_MIN && Num_tmp2 <= INT_MAX) {
+				if (Num_tmp2 >= L && Num_tmp2 <= R) {
 
 				}
 				else {
@@ -350,7 +355,7 @@ int main() {
 
 			}
 			else {
-				if (Num_tmp2 >= INT_MIN && Num_tmp2 <= INT_MAX) {
+				if (Num_tmp2 >= L && Num_tmp2 <= R) {
 
 				}
 				else {
@@ -417,6 +422,35 @@ int main() {
 			system("cls");
 			SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE), pos);
 		}
+		if (Selection == 22) {
+			printf("몇번째 리스트 ? :");
+			err = scanf("%lld", &Num_tmp);
+			if (err != 1) {
+				printf("\n잘못된 입력\n");
+				Sleep(300);
+				while (getchar() != '\n') {}
+				system("cls");
+				SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE), pos);
+				continue;
+
+			}
+			printf("몇번째 요소 ? :");
+			err = scanf("%lld", &Num_tmp2);
+			if (err != 1) {
+				printf("\n잘못된 입력\n");
+				Sleep(300);
+				while (getchar() != '\n') {}
+				system("cls");
+				SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE), pos);
+				continue;
+
+			}
+			Node_tmp = DeleteNode_Count(Lists[Num_tmp], Num_tmp2);
+			free(Node_tmp);
+			Node_tmp = NULL;
+			system("cls");
+			SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE), pos);
+		}
 		if (Selection == 12) {
 			printf("몇번째 리스트 ? :");
 			err = scanf("%lld", &Num_tmp);
@@ -457,6 +491,44 @@ int main() {
 
 			}
 			Node_tmp = Modify(Lists[Num_tmp], Node_tmp, Num_tmp2);
+			system("cls");
+			SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE), pos);
+		}
+		if (Selection == 23) {
+			printf("몇번째 리스트 ? :");
+			err = scanf("%lld", &Num_tmp);
+			if (err != 1) {
+				printf("\n잘못된 입력\n");
+				Sleep(300);
+				while (getchar() != '\n') {}
+				system("cls");
+				SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE), pos);
+				continue;
+
+			}
+			printf("몇번째 노드 ? :");
+			err = scanf("%lld", &Num_tmp2);
+			if (err != 1) {
+				printf("\n잘못된 입력\n");
+				Sleep(300);
+				while (getchar() != '\n') {}
+				system("cls");
+				SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE), pos);
+				continue;
+
+			}
+			printf("수정할 Object ? :");
+			err = scanf("%lld", &Num_tmp3);
+			if (err != 1) {
+				printf("\n잘못된 입력\n");
+				Sleep(300);
+				while (getchar() != '\n') {}
+				system("cls");
+				SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE), pos);
+				continue;
+
+			}
+			Node_tmp = Modify_by_Count(Lists[Num_tmp], Num_tmp2, Num_tmp3);
 			system("cls");
 			SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE), pos);
 		}

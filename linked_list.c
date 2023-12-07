@@ -386,6 +386,23 @@ Node* Delete(LinkedList* _ptList, Node* _ptNode) {
 
 }
 
+Node* DeleteNode_Count(LinkedList* _ptList, int count) {
+	if (!_ptList ) {
+		printf("리스트가 비어있습니다.");
+		Sleep(3000);
+		return NULL;
+	}
+	if (count > _ptList->m_uCount) {
+		printf("해당리스트는 %d 개의 노드만 가지고 있습니다.\n", _ptList->m_uCount);
+		return NULL;
+	}
+	Node* tmp = _ptList->m_pHead;
+	for (int i = 0; i < count; i++) {
+		tmp = tmp->m_pNext;
+	}
+	return (Delete(_ptList, tmp));
+}
+
 /*
 	기능 : 모든 노드를 제거한다
 	함수명 : DeleteAll
@@ -445,6 +462,21 @@ Node* Modify(LinkedList* _ptList, Node* _ptNode, int iObject) {
 		_ptList->m_pCurrent->m_iObject = iObject;
 	}
 	return _ptList->m_pCurrent;
+}
+Node* Modify_by_Count(LinkedList* _ptList, int count, int iObject) {
+	if (!_ptList) {
+		printf("비어있는 리스트");
+		return NULL;
+	}
+	if (count > _ptList->m_uCount) {
+		printf("해당 리스트는 %d 개의 요소만 갖고있음", _ptList->m_uCount);
+		return NULL;
+	}
+	Node* tmp = _ptList->m_pHead;
+	for (int i = 0; i < count; i++) {
+		tmp = tmp->m_pNext;
+	}
+	return (Modify(_ptList, tmp, iObject));
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////
