@@ -31,8 +31,8 @@ void Create(LinkedList** _ptList) {
 
 void Destroy(LinkedList** _ptList) {
 	if ((*_ptList) == NULL) {
-		printf("해당 리스트는 비어 있습니다.");
-		Sleep(2000);
+		printf("해당 리스트는 비어 있습니다.\n");
+
 		return;				//비어 있으면 종료
 	}
 	if (!(*_ptList)->m_pHead) {
@@ -80,13 +80,13 @@ Node* GetNode(int _iObject) {
 
 Node* Read(LinkedList* _ptList, unsigned int i) {
 	if (!(_ptList)) {
-		printf("해당 리스트는 비어 있습니다.");
-		Sleep(2000);
+		printf("해당 리스트는 비어 있습니다.\n");
+	
 		return NULL;				//비어 있으면 종료
 	}
 	if (_ptList->m_uCount < i) {
-		printf("해당 리스트는 %d개의 요소만 갖고있습니다.", _ptList->m_uCount);
-		Sleep(2000);
+		printf("해당 리스트는 %d개의 요소만 갖고있습니다.\n", _ptList->m_uCount);
+	
 		return NULL;				//벗어나면 종료
 	}
 	int count = 0;
@@ -117,20 +117,21 @@ void Traversal(LinkedList* _ptList) {
 	}
 	*/
 	if (!_ptList) {
-		printf("해당리스트는 만들어지지 않았습니다.");
-		Sleep(3000);
+		printf("해당리스트는 만들어지지 않았습니다.\n");
+
 		return;
 	}
-	if (!_ptList->m_pHead) { printf("Empty"); Sleep(2000); return; }
+	if (!_ptList->m_pHead) { printf("Empty\n");; return; }
 
 	Node* curr = _ptList->m_pHead;
 	while (count < _ptList->m_uCount) {
 
-		printf(" %d @ \n", curr->m_iObject);
+		printf(" %d ", curr->m_iObject);
 		curr = curr->m_pNext;
 		count++;
 	}
-	Sleep(3000);
+	printf("\n");
+	return;
 }
 
 
@@ -146,7 +147,7 @@ void Traversal(LinkedList* _ptList) {
 */
 
 Node* AppendFromHead(LinkedList* _ptList, int _iObject) {
-	if (!_ptList) { printf("해당리스트는 만들어지지 않았습니다."); Sleep(500); return NULL; }
+	if (!_ptList) { printf("해당리스트는 만들어지지 않았습니다.\n");  return NULL; }
 
 	_ptList->m_pCurrent = GetNode(_iObject);
 	if (_ptList->m_pHead) {
@@ -172,7 +173,7 @@ Node* AppendFromHead(LinkedList* _ptList, int _iObject) {
 */
 
 Node* AppendFromTail(LinkedList* _ptList, int _iObject) {
-	if (!_ptList) { printf("해당리스트는 만들어지지 않았습니다."); Sleep(500); return NULL; }
+	if (!_ptList) { printf("해당리스트는 만들어지지 않았습니다.\n");  return NULL; }
 
 	_ptList->m_pCurrent = GetNode(_iObject);
 	if (_ptList->m_pHead) {
@@ -192,7 +193,7 @@ Node* AppendFromTail(LinkedList* _ptList, int _iObject) {
 
 Node* InsertBefore(LinkedList* _ptList, Node* _ptNode, int Object) {
 	if (_ptList == NULL) {
-		printf(" 해당 리스트는 비어있습니다.");
+		printf(" 해당 리스트는 만들어지지 X.\n");
 		return _ptNode;
 	}
 	int Isin = 0;
@@ -207,7 +208,7 @@ Node* InsertBefore(LinkedList* _ptList, Node* _ptNode, int Object) {
 	}
 	if (Isin == 0) {
 		printf("기준노드 없음\n");
-		Sleep(1000);
+	
 		return _ptNode;
 
 	}
@@ -227,7 +228,7 @@ Node* InsertBefore(LinkedList* _ptList, Node* _ptNode, int Object) {
 
 Node* InsertAfter(LinkedList* _ptList, Node* _ptNode, int Object) {
 	if (_ptList == NULL) {
-		printf(" 해당 리스트는 비어있습니다.");
+		printf(" 해당 리스트는 만들어지지 X.\n");
 		return _ptNode;
 	}
 	int Isin = 0;
@@ -242,7 +243,7 @@ Node* InsertAfter(LinkedList* _ptList, Node* _ptNode, int Object) {
 	}
 	if (Isin == 0) {
 		printf("기준노드 없음\n");
-		Sleep(1000);
+	
 		return _ptNode;
 	}
 
@@ -258,6 +259,49 @@ Node* InsertAfter(LinkedList* _ptList, Node* _ptNode, int Object) {
 	return _ptList->m_pCurrent;
 }
 
+Node* Insert_Count_Before(LinkedList* _ptList, int Count, int Object) {
+	if (_ptList == NULL) {
+		printf("생성되지 않은 리스트.\n");
+		return NULL;
+	}
+	if (_ptList->m_uCount == 0) {
+		printf("해당 리스트는 비어있습니다.\n");
+		return NULL;
+	}
+	if (Count > _ptList->m_uCount) {
+		printf("해당 리스트는 %d 개의 요소만 갖고있습니다.\n", _ptList->m_uCount);
+		return NULL;
+	}
+	Node* tmp = _ptList->m_pHead;
+	for (int i = 0; i < Count; i++) {
+		tmp = tmp->m_pNext;
+	}
+	return(InsertBefore(_ptList, tmp, Object));
+}
+
+Node* Insert_Count_After(LinkedList* _ptList, int Count, int Object) {
+	if (_ptList == NULL) {
+		printf("생성되지 않은 리스트.\n");
+		return NULL;
+	}
+	if (_ptList == NULL) {
+		printf("비어있는 리스트\n");
+		return NULL;
+	}
+	if (_ptList->m_uCount == 0) {
+		printf("해당 리스트는 비어있습니다.\n");
+		return NULL;
+	}
+	if (Count > _ptList->m_uCount) {
+		printf("해당 리스트는 %d 개의 요소만 갖고있습니다.\n", _ptList->m_uCount);
+		return NULL;
+	}
+	Node* tmp = _ptList->m_pHead;
+	for (int i = 0; i < Count; i++) {
+		tmp = tmp->m_pNext;
+	}
+	return(InsertAfter(_ptList, tmp, Object));
+}
 
 /*
 	기능 : 앞에 노드를 제거한다
@@ -268,9 +312,17 @@ Node* InsertAfter(LinkedList* _ptList, Node* _ptNode, int Object) {
 */
 
 Node* DeleteFromHead(LinkedList* _ptList) {
+	if (!_ptList) {
+		printf("비어있는 리스트\n");
+		return NULL;
+	}
+	if (_ptList == NULL) {
+		printf("비어있는 리스트\n");
+		return NULL;
+	}
 	if (_ptList->m_uCount == 0) {						//비어있으면 리턴
-		printf("해당 리스트는 비어있습니다.");
-		Sleep(1000);
+		printf("해당 리스트는 비어있습니다.\n");
+
 		return NULL;
 	}
 
@@ -305,9 +357,13 @@ Node* DeleteFromHead(LinkedList* _ptList) {
 */
 
 Node* DeleteFromTail(LinkedList* _ptList) {
+	if (!_ptList) {
+		printf("없는 리스트\n");
+		return NULL;
+	}
 	if (_ptList->m_uCount == 0) {					//비어있으면 리턴
-		printf("해당 리스트는 비어있습니다.");
-		Sleep(1000);
+		printf("해당 리스트는 비어있습니다.\n");
+	
 		return NULL;
 	}
 
@@ -343,8 +399,8 @@ Node* DeleteFromTail(LinkedList* _ptList) {
 
 Node* Delete(LinkedList* _ptList, Node* _ptNode) {
 	if (!_ptList || !_ptNode) {
-		printf("리스트가 비어있거나, 해당 노드는 비어있습니다.");
-		Sleep(3000);
+		printf("리스트가 비어있거나, 해당 노드는 비어있습니다.\n");
+
 		return NULL;
 	}
 
@@ -366,7 +422,7 @@ Node* Delete(LinkedList* _ptList, Node* _ptNode) {
 	}
 	if (count == _ptList->m_uCount) {
 		printf("리스트에서 해당 노드를 찾을 수 없습니다.\n");
-		Sleep(3000);
+
 		return NULL;
 	}
 	else {
@@ -388,8 +444,8 @@ Node* Delete(LinkedList* _ptList, Node* _ptNode) {
 
 Node* DeleteNode_Count(LinkedList* _ptList, int count) {
 	if (!_ptList ) {
-		printf("리스트가 비어있습니다.");
-		Sleep(3000);
+		printf("리스트가 비어있습니다.\n");
+
 		return NULL;
 	}
 	if (count > _ptList->m_uCount) {
@@ -413,13 +469,13 @@ Node* DeleteNode_Count(LinkedList* _ptList, int count) {
 
 void DeleteAll(LinkedList* _ptList) {
 	if (!_ptList) {
-		printf("해당리스트는 만들어지지 않았습니다.");
-		Sleep(3000);
+		printf("해당리스트는 만들어지지 않았습니다.\n");
+	
 		return;
 	}
 	if (_ptList->m_uCount == 0) {
-		printf("리스트가 비어 있습니다.");
-		Sleep(1000);
+		printf("리스트가 비어 있습니다.\n");
+
 		return;
 	}
 
@@ -464,12 +520,16 @@ Node* Modify(LinkedList* _ptList, Node* _ptNode, int iObject) {
 	return _ptList->m_pCurrent;
 }
 Node* Modify_by_Count(LinkedList* _ptList, int count, int iObject) {
+	if (_ptList == NULL) {
+		printf("생성 안된 리스트\n");
+		return NULL;
+	}
 	if (!_ptList) {
-		printf("비어있는 리스트");
+		printf("비어있는 리스트\n");
 		return NULL;
 	}
 	if (count > _ptList->m_uCount) {
-		printf("해당 리스트는 %d 개의 요소만 갖고있음", _ptList->m_uCount);
+		printf("해당 리스트는 %d 개의 요소만 갖고있음\n", _ptList->m_uCount);
 		return NULL;
 	}
 	Node* tmp = _ptList->m_pHead;
@@ -493,7 +553,7 @@ Node* LinearSearchByUnique(LinkedList* _ptList, int Object) {
 
 	if (!_ptList) {
 		printf("리스트가 비어 있습니다.\n");
-		Sleep(500);
+
 		return NULL;
 	}
 
@@ -511,7 +571,7 @@ Node* LinearSearchByUnique(LinkedList* _ptList, int Object) {
 	}
 
 	printf("해당 숫자를 찾을 수 없습니다.\n");
-	Sleep(500);
+
 	return NULL;
 
 
@@ -534,12 +594,16 @@ void LinearSearchByDuplicate(LinkedList* _ptList, int Object, int* _resultSize, 
 	for (int i = 0; i < _ptList->m_uCount; i++) {
 
 		if (_ptList->m_pCurrent->m_iObject == Object) {
+			if (i % 4 == 0) {
+				printf("\n");
+			}
 			printf("%d 번째 요소  ", i);
 			Match_Count++;
-			Sleep(500);
+
 		}
 		_ptList->m_pCurrent = _ptList->m_pCurrent->m_pNext;
 	}
+	printf("\n");
 	if (Match_Count == 0) {
 		return;						// 없을 경우
 	}
@@ -570,13 +634,13 @@ void LinearSearchByDuplicate(LinkedList* _ptList, int Object, int* _resultSize, 
 Node* BinarySearchByUnique(LinkedList* _ptList, int Object) {
 	if (!_ptList) {
 		printf("리스트가 비어 있습니다.\n");
-		Sleep(500);
+
 		return NULL;
 
 	}
 	if (_ptList->m_pHead == NULL) {
 		printf("리스트가 비어 있습니다.\n");
-		Sleep(500);
+
 		return NULL;
 	}
 	int FoundFlag = 0;
@@ -604,7 +668,7 @@ Node* BinarySearchByUnique(LinkedList* _ptList, int Object) {
 	}
 	if (FoundFlag == 0) {
 		printf("%d 리스트 내에 없습니다.\n", Object);
-		Sleep(500);
+
 		return NULL;
 	}
 	Node* RTN = _ptList->m_pCurrent;
@@ -625,12 +689,12 @@ Node* BinarySearchByUnique(LinkedList* _ptList, int Object) {
 void BinarySearchByDuplicate(LinkedList* _ptList, int Object, int* _resultSize, Node*** _resultArray) {
 	if (!_ptList) {
 		printf("리스트가 비어 있습니다.\n");
-		Sleep(500);
+
 		return;
 	}
 	if (_ptList->m_pHead == NULL) {
 		printf("리스트가 비어 있습니다.\n");
-		Sleep(500);
+
 		return;
 	}
 	int FoundFlag = 0;
@@ -710,16 +774,16 @@ void BinarySearchByDuplicate(LinkedList* _ptList, int Object, int* _resultSize, 
 
 	if (FoundFlag == 0) {
 		printf("%d 은(는) 리스트 내에 없습니다.\n", Object);
-		Sleep(2000);
+
 		return;
 	}
 
 	printf("%d\n", Start);
 
-	printf("%d의 있는 범위 : %d~%d   \n", Object, S_tmp, Start);
+	printf("-%d- 이 있는 범위 : %d~%d   \n", Object, S_tmp, Start);
 	*_resultSize = Start - S_tmp + 1;
 	printf("%d 개 찾음\n", *_resultSize);
-	Sleep(5000);
+
 	//*_resultArray = (Node**)calloc(*_resultSize, sizeof(Node*));	//수만큼 동적 할당
 
 	//_ptList->m_pCurrent = _ptList->m_pHead;
