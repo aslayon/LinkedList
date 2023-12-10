@@ -782,9 +782,10 @@ int main() {
 				continue;
 
 			}
-			Node_tmp = Modify(Lists[Num_tmp], Node_tmp, Num_tmp2);
 			system("cls");
 			SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE), pos);
+			Node_tmp = Modify(Lists[Num_tmp], Node_tmp, Num_tmp2);
+			
 		}
 		if (Selection == 31) {
 			Selection_flag = 1;

@@ -502,6 +502,11 @@ void DeleteAll(LinkedList* _ptList) {
 
 Node* Modify(LinkedList* _ptList, Node* _ptNode, int iObject) {
 	if (!_ptList || !_ptNode) {
+		printf("리스트나 기준노드가 비어있습니다.\n");
+		return NULL;
+	}
+	if (_ptList == NULL || _ptNode==NULL) {
+		printf("리스트나 기준노드가 비어있습니다.\n");
 		return NULL;
 	}
 	int count = 0;
