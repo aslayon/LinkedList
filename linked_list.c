@@ -651,6 +651,15 @@ Node* BinarySearchByUnique(LinkedList* _ptList, int Object) {
 	int FoundFlag = 0;
 	int Start = 0;
 	int End = _ptList->m_uCount;
+	_ptList->m_pCurrent = _ptList->m_pHead;
+	for (int i = 0; i < _ptList->m_uCount; i++) {
+		if (_ptList->m_pCurrent->m_iObject > _ptList->m_pCurrent->m_pNext->m_iObject) {
+			printf("정렬되지 않은 리스트 입니다.\n");
+			return;
+		}
+		_ptList->m_pCurrent = _ptList->m_pCurrent->m_pNext;
+	}
+
 	_ptList->m_pCurrent = NULL;
 	while (Start <= End) {
 
@@ -705,8 +714,16 @@ void BinarySearchByDuplicate(LinkedList* _ptList, int Object, int* _resultSize, 
 	int FoundFlag = 0;
 	int Start = 0;
 	int End = _ptList->m_uCount;
-	_ptList->m_pCurrent = NULL;
+	_ptList->m_pCurrent = _ptList->m_pHead;
 
+	for (int i = 0; i < _ptList->m_uCount; i++) {
+		if (_ptList->m_pCurrent->m_iObject > _ptList->m_pCurrent->m_pNext->m_iObject) {
+			printf("정렬되지 않은 리스트 입니다.\n");
+			return;
+		}
+		_ptList->m_pCurrent = _ptList->m_pCurrent->m_pNext;
+	}
+	_ptList->m_pCurrent = NULL;
 	int S_tmp = 0;
 	printf("\n가장 왼쪽 요소 찾기 시작.\n");
 	while (Start < End) {
