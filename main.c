@@ -832,9 +832,10 @@ int main() {
 				continue;
 
 			}
-			Node_tmp = Modify_by_Count(Lists[Num_tmp], Num_tmp2, Num_tmp3);
 			system("cls");
 			SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE), pos);
+			Node_tmp = Modify_by_Count(Lists[Num_tmp], Num_tmp2, Num_tmp3);
+			
 		}
 		if (Selection == 41) {
 			Selection_flag = 1;
